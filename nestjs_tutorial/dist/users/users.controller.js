@@ -14,29 +14,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
+const LocalGuard_1 = require("../auth/utils/LocalGuard");
 const CreateUser_dto_1 = require("./dto/CreateUser.dto");
 const UserNotFound_exception_1 = require("./exceptions/UserNotFound.exception");
 const HttpException_filter_1 = require("./filters/HttpException.filter");
-const types_1 = require("./types");
 const users_service_1 = require("./users.service");
 let UsersController = class UsersController {
     constructor(userService) {
         this.userService = userService;
     }
     getUsers() {
-        return this.userService.getUsers();
+        return this.userService.getAllUsers();
     }
     getByUsername(username) {
         const user = this.userService.getUserByUsername(username);
         if (user)
-            return new types_1.SerializedUser(user);
+            return user;
         else
             throw new common_1.HttpException('User not found', common_1.HttpStatus.BAD_REQUEST);
     }
     getById(id) {
         const user = this.userService.getUserById(id);
         if (user)
-            return new types_1.SerializedUser(user);
+            return user;
         else {
             throw new UserNotFound_exception_1.UserNotFoundException('User Was Not Found');
         }
@@ -46,6 +46,7 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
+    (0, common_1.UseGuards)(LocalGuard_1.AuthenticatedGuard),
     (0, common_1.UseInterceptors)(common_1.ClassSerializerInterceptor),
     (0, common_1.Get)(''),
     __metadata("design:type", Function),

@@ -1,13 +1,14 @@
-import { User as UserEntity } from 'src/typeorm';
+import { User, User as UserEntity } from 'src/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUser.dto';
-import { SerializedUser, User } from './types/index';
 export declare class UsersService {
     private readonly userRepository;
     constructor(userRepository: Repository<UserEntity>);
     private users;
-    getUsers(): SerializedUser[];
-    getUserByUsername(username: string): User;
-    getUserById(id: number): User;
-    createUser(createUserDto: CreateUserDto): Promise<UserEntity>;
+    getAllUsers(): Promise<User[]>;
+    getUserByUsername(username: string): Promise<User[]>;
+    getUserById(id: number): Promise<User[]>;
+    createUser(createUserDto: CreateUserDto): Promise<User>;
+    findUserByUsername(username: string): Promise<User>;
+    findUserById(id: number): Promise<User>;
 }
