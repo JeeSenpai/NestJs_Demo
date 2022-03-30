@@ -18,25 +18,30 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("../typeorm");
 const bycrypt_1 = require("../utils/bycrypt");
 const typeorm_3 = require("typeorm");
-const index_1 = require("./types/index");
 let UsersService = class UsersService {
     constructor(userRepository) {
         this.userRepository = userRepository;
         this.users = [];
     }
-    getUsers() {
-        return this.users.map((user) => new index_1.SerializedUser(user));
+    getAllUsers() {
+        return this.userRepository.find();
     }
     getUserByUsername(username) {
-        return this.users.find((user) => user.username === username);
+        return this.userRepository.find({ username });
     }
     getUserById(id) {
-        return this.users.find((user) => user.id === id);
+        return this.userRepository.find({ id });
     }
     createUser(createUserDto) {
         const password = (0, bycrypt_1.encodePassword)(createUserDto.password);
         const newUser = this.userRepository.create(Object.assign(Object.assign({}, createUserDto), { password }));
         return this.userRepository.save(newUser);
+    }
+    findUserByUsername(username) {
+        return this.userRepository.findOne({ username });
+    }
+    findUserById(id) {
+        return this.userRepository.findOne(id);
     }
 };
 UsersService = __decorate([
